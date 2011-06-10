@@ -1,13 +1,6 @@
-Hey so I got kind of tired of adding in a battery mod for ever framework leak and such so I thought I could make it easier. And oh man, it's pretty damn easy now :).
+usage :
 
-
-First, this is for developers, if you don't understand any of the terms used here, that means you probably have no use for this.
-
-Developers, you may or may not develop a strong love for me.
-
-Ok so here's the basics on how to use this little app, it requires java. I kind of slapped it together in a hurry today so there's not really any dummy proofing, and it's basic as can be.
-
-[CODE]java -jar framework_helper.jar [path to public xml file] [COLOR="Magenta"][# of battery images][/COLOR][COLOR="green"][# of charging images][/COLOR] [COLOR="DarkOrchid"][optional file to pull custom strings from][/COLOR][/CODE]
+	java -jar framework_helper.jar [path to public xml file] [# of battery images] [# of charging images] [optional file to pull custom strings from]
 
 Let me explain some of these real quick
 [COLOR="Magenta"][# of battery images][/COLOR] - usually you guys are going to have this at 100, it's the TOTAL number of images for percentage (some may want to have it at 20, but i left it flexible)
