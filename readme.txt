@@ -1,35 +1,30 @@
-Hey so I got kind of tired of adding in a battery mod for ever framework leak and such so I thought I could make it easier. And oh man, it's pretty damn easy now :).
+**Usage**
+=========
 
+	java -jar framework_helper.jar [path to public xml file] [# of battery images] [# of charging images] [optional file to pull custom strings from]
 
-First, this is for developers, if you don't understand any of the terms used here, that means you probably have no use for this.
+Explanation
+-----------
+`[# of battery images]` - usually you guys are going to have this at 100, it's the TOTAL number of images for percentage (some may want to have it at 20, but i left it flexible)
 
-Developers, you may or may not develop a strong love for me.
+`[# of charging images]` - however many you want, 20 for 5% increments, or maybe just 100. note: it starts at 0, so if you want 100 charging images, the last one should be named 99. please ask if you need clarification on this.
 
-Ok so here's the basics on how to use this little app, it requires java. I kind of slapped it together in a hurry today so there's not really any dummy proofing, and it's basic as can be.
-
-[CODE]java -jar framework_helper.jar [path to public xml file] [COLOR="Magenta"][# of battery images][/COLOR][COLOR="green"][# of charging images][/COLOR] [COLOR="DarkOrchid"][optional file to pull custom strings from][/COLOR][/CODE]
-
-Let me explain some of these real quick
-[COLOR="Magenta"][# of battery images][/COLOR] - usually you guys are going to have this at 100, it's the TOTAL number of images for percentage (some may want to have it at 20, but i left it flexible)
-
-[COLOR="green"][# of charging images][/COLOR] - however many you want, 20 for 5% increments, or maybe just 100. note: it starts at 0, so if you want 100 charging images, the last one should be named 99. please ask if you need clarification on this.
-
-[COLOR="DarkOrchid"][optional file to pull custom strings from][/COLOR] - if you are someone like Whitehawkx and does mods constantly, this may be of use, besides the battery images, it can add more resource IDs for whatever you might want.
+`[optional file to pull custom strings from]` - if you are someone like Whitehawkx and does mods constantly, this may be of use, besides the battery images, it can add more resource IDs for whatever you might want.
 
 to use this, just simply put in a text file and input the text file. for example:
 
 Say I have a file called custom.txt, in the file are the following: 
 
-[QUOTE][QUOTE]hawk_reboot
-hawk_recovery
-hawk_download[/QUOTE][/QUOTE]
+> `hawk_reboot`   
+> `hawk_recovery`  
+> `hawk_download`  
 
 Then here are my inputs:
-[CODE]java -jar framework_helper.jar public.xml 100 20 custom.txt[/CODE]
+>java -jar framework_helper.jar public.xml 100 20 custom.txt[/CODE]
 
 The following is [I]ADDED [/I]to your existing public.xml with PROPER resource Ids and in theproper location (the program does extensive checking to make sure no ids are duplicated :))
 
-[CODE]	<public type="drawable" name="hawk_reboot" id="0x01080404" />
+	<public type="drawable" name="hawk_reboot" id="0x01080404" />
 	<public type="drawable" name="hawk_recovery" id="0x01080405" />
 	<public type="drawable" name="hawk_download" id="0x01080406" />
 	<public type="drawable" name="stat_sys_battery_1" id="0x01080423" />
@@ -139,15 +134,16 @@ The following is [I]ADDED [/I]to your existing public.xml with PROPER resource I
 	<public type="drawable" name="stat_sys_battery_charge_anim16" id="0x0108048b" />
 	<public type="drawable" name="stat_sys_battery_charge_anim17" id="0x0108048c" />
 	<public type="drawable" name="stat_sys_battery_charge_anim18" id="0x0108048d" />
-	<public type="drawable" name="stat_sys_battery_charge_anim19" id="0x0108048e" />[/CODE]
+	<public type="drawable" name="stat_sys_battery_charge_anim19" id="0x0108048e" />
 
 I can also do 
-[CODE]java -jar framework_helper.jar public.xml 100 20[/CODE]
+		java -jar framework_helper.jar public.xml 100 20
 
 And it will just add the battery mod.
 
 
-[B][U]Notes[/U][/B]
+Notes
+-----
 -If you try and add something that already exists, the program will skip it properly. for instance stat_sys_battery_20 40 60 80 will not get added because it already exists in the public xml.
 -In the future, I will try and have it generate a stat_sys_battery and a stat_sys_battery_charge automagically for you! For now, you still have to do these yourself
 
