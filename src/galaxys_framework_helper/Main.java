@@ -26,7 +26,7 @@ public class Main {
 
     static HashMap<Integer, String> idMap;
     static int hex;
-    private static final String OUTPUT_NAME = "public.xml";
+    private static String OUTPUT_NAME = "public.xml";
     private static final String OUTPUT_NAME_BACKUP = "public.xml.original";
     static int numberOfBatteryImages;
     static int numberOfChargingImages;
@@ -53,37 +53,45 @@ public class Main {
      * [0] - public.xml file
      * [1] - number of battery images to add
      * [2] - number of charging battery images to add
+     * [3] - custom file
      */
     public static void main(String[] args) throws FileNotFoundException {
 
         String lastDrawableInstance = "";
         numberOfBatteryImages = Integer.parseInt(args[1]);
         numberOfChargingImages = Integer.parseInt(args[2]);
-        boolean hasDrawable = false;
+        boolean hasCustomEntries = false;
 
         FileOutputStream fos = null;
         PrintWriter out = null;
 
-        //rename input to backup name
-        if (args[0].equals(OUTPUT_NAME)) {
-            System.out.println("Renaming " + OUTPUT_NAME + " to " + OUTPUT_NAME_BACKUP);
-            File backupFile = new File(OUTPUT_NAME_BACKUP);
-
-            //delete old one if it exists
-            if (backupFile.exists()) {
-                System.out.println("deleting old " + OUTPUT_NAME_BACKUP);
-                backupFile.delete();
-                backupFile = new File(OUTPUT_NAME_BACKUP);
-
-            }
-
-
-            //args[0] = OUTPUT_NAME_BACKUP;
-            (new File(OUTPUT_NAME)).renameTo(new File(OUTPUT_NAME_BACKUP));
+        try {
+            extras = getExtraEntries(new File(args[3]));
+            hasCustomEntries = true;
+        } catch (Exception e) {
         }
 
+        //rename input to backup name
+//        if (args[0].equals(OUTPUT_NAME)) {
+        OUTPUT_NAME = args[0];
+        System.out.println("Renaming " + OUTPUT_NAME + " to " + OUTPUT_NAME_BACKUP);
+        File backupFile = new File(OUTPUT_NAME_BACKUP);
+
+        //delete old one if it exists
+        if (backupFile.exists()) {
+            System.out.println("deleting old " + OUTPUT_NAME_BACKUP);
+            backupFile.delete();
+            backupFile = new File(OUTPUT_NAME_BACKUP);
+
+        }
+
+
+        //args[0] = OUTPUT_NAME_BACKUP;
+        (new File(OUTPUT_NAME)).renameTo(new File(OUTPUT_NAME_BACKUP));
+//        }
+
         Scanner input = new Scanner(new File(OUTPUT_NAME_BACKUP));
-        extras = getExtraEntries(new File(args[3]));
+
         idMap = getHexIDs(OUTPUT_NAME_BACKUP);
 
         try {
@@ -102,23 +110,24 @@ public class Main {
 
             for (int i = 1; i < types.length; i++) {
 
-                //write custom entries
-                if (currentLine.contains("type=\"" + types[i] + "\"") && lastLine.contains("type=\"" + types[i - 1] + "\"")) {
-                    //handle attrs
-                    hex = getHex(lastLine);
+                if (hasCustomEntries) {
+                    //write custom entries
+                    if (currentLine.contains("type=\"" + types[i] + "\"") && lastLine.contains("type=\"" + types[i - 1] + "\"")) {
+                        //handle attrs
+                        hex = getHex(lastLine);
 
-                    for (ExtraEntry extra : extras) {
-                        if (extra.type.equals(types[i - 1])) {
-                            //String lhex = getCurrentHex();
-                            hex = getNextFreeHex();
-                            idMap.put(hex, extra.name);
-                            String xmlLine = "\t<public type=\"" + extra.type + "\" name=\"" + extra.name + "\" id=\"" + getCurrentHex() + "\" />";
-                            out.println(xmlLine);
+                        for (ExtraEntry extra : extras) {
+                            if (extra.type.equals(types[i - 1])) {
+                                //String lhex = getCurrentHex();
+                                hex = getNextFreeHex();
+                                idMap.put(hex, extra.name);
+                                String xmlLine = "\t<public type=\"" + extra.type + "\" name=\"" + extra.name + "\" id=\"" + getCurrentHex() + "\" />";
+                                out.println(xmlLine);
+                            }
                         }
+                        //break;
                     }
-                    //break;
                 }
-
             }
 
             //write batteries
@@ -128,7 +137,7 @@ public class Main {
                     String name = "stat_sys_battery_" + j;
                     boolean unique = !idMap.containsValue(name);
 
-                    System.out.println("Got a new hex: " + getNextFreeHex());
+                    //System.out.println("Got a new hex: " + getNextFreeHex());
                     if (unique) {
                         //name = "name=\"stat_sys_battery_" + j + "\"";
                         String xmlLine = "\t<public type=\"drawable\" name=\"" + name + "\" id=\"" + getCurrentHex() + "\" />";
@@ -142,7 +151,7 @@ public class Main {
                     String name = "stat_sys_battery_charge_anim" + j;
                     boolean unique = !idMap.containsValue(name);
 
-                    System.out.println("Got a new hex: " + getNextFreeHex());
+                    //System.out.println("Got a new hex: " + getNextFreeHex());
                     if (unique) {
                         //name = "name=\"stat_sys_battery_" + j + "\"";
                         String xmlLine = "\t<public type=\"drawable\" name=\"" + name + "\" id=\"" + getCurrentHex() + "\" />";
@@ -157,7 +166,7 @@ public class Main {
             lastLine = currentLine;
 
         }
-        
+
         input.close();
         out.close();
         try {
@@ -237,9 +246,9 @@ public class Main {
             if (idMap.containsKey(hex)) {
 //                System.out.println(hexS + " was found, adding one");
                 hex++;
-                System.out.println("idmap contains " + hex + ", incrementing");
+                //System.out.println("idmap contains " + hex + ", incrementing");
             } else {
-                System.out.println("Free hex: " + Integer.toString(hex, 16));
+               // System.out.println("Free hex: " + Integer.toString(hex, 16));
                 if (idMap.containsKey(hex)) {
                     System.out.println("SOMETHING IS FUCKED BRO");
                 }
@@ -271,7 +280,7 @@ public class Main {
         int endHexLoc = line.indexOf("\"", hexLoc + 4);
         String stringHex = line.substring(hexLoc + 6, endHexLoc);
 
-        System.out.println(stringHex + " getHex(): " + Integer.parseInt(stringHex, 16));
+        //System.out.println(stringHex + " getHex(): " + Integer.parseInt(stringHex, 16));
         return Integer.parseInt(stringHex, 16);
     }
 
